@@ -1,5 +1,24 @@
 from classes import MALSchedule
 
 if __name__ == "__main__":
-    schedule = MALSchedule()
-    print(schedule.request_schedule()[3][0])  # Currently Komi Can't Communicate
+    scheduler = MALSchedule()
+    # print(scheduler()["Thursday"][0])  # Currently Komi Can't Communicate
+    
+    schedule = scheduler.request_schedule()
+    for day, animes in schedule.items():
+        print(f"-------------------- {day} --------------------")
+        for anime in animes:
+            print(
+                f"Name: {anime.name}\n"
+                f"Producer: {anime.producer}\n"
+                f"Tags: {', '.join(anime.tags)}\n"
+                f"Rating: {anime.score}/10\n"
+                f"Metadata: {', '.join([key+': '+value for key, value in anime.metadata.items()])}\n"
+                f"Viewer discretion: {anime.discretion}\n"
+                f"\n"
+                f"Synopsis:\n"
+                f"{anime.synopsis}\n"
+                f"Image url: {anime.image_url}\n"
+                f"----------\n"
+                f"\n"
+            )
