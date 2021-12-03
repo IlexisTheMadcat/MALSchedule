@@ -9,6 +9,7 @@ from utils import convert_list_iterator as convert
 class FetchError(Exception):
     pass
 
+
 @dataclass
 class Anime:
     name: str
@@ -18,6 +19,8 @@ class Anime:
     score: float
     synopsis: str
     metadata: dict
+    estimated_rating: str
+
 
 class MALSchedule:
     def __init__(self):
@@ -31,20 +34,9 @@ class MALSchedule:
         html = response.content
         soup = BeautifulSoup(html, "html.parser")
 
-        entries = {
-            0: list(),
-            1: list(),
-            2: list(),
-            3: list(),
-            4: list(),
-            5: list(),
-            6: list(),
-            7: list(), 
-            8: list()
-        }
+        entries = dict()
 
         week_data: Tag = soup.find("div", class_="js-categories-seasonal")
-        print(len(convert(week_data.children)))
 
         passed_article = False
         for ind, day_data in enumerate(convert(week_data.children)):
@@ -59,20 +51,27 @@ class MALSchedule:
                 try: anime_entry["style"]
                 except KeyError: pass
                 else: 
-                    if "display: none" in anime_entry["style"]:
-                        continue
+                    if "display: none" in anime_entry["style"]: continue
+
+                if "anime-header" in anime_entry["class"]:
+                    weekday = anime_entry.text
+                    if weekday not in entries:
+                        entries[weekday] = list()
 
                 if all([i in anime_entry.attrs["class"] for i in ["seasonal-anime", "js-seasonal-anime"]]):
-                    
                     anime["name"] = anime_entry.find("div", class_=""
                                               ).find("div", class_="title"
                                               ).find("div", class_="title-text"
                                               ).find("h2", class_="h2_anime_title"
                                               ).a.text
 
-                    anime["producer"] = anime_entry.find("div", class_=""
-                                                  ).find("div", class_="prodsrc"
-                                                  ).a.text
+                    producer_info = anime_entry.find("div", class_=""
+                              ).find("div", class_="prodsrc"
+                              ).find("span", class_="producer")
+                    if not producer_info.find("a"):
+                        anime["producer"] = "Not provided"
+                    else:
+                        anime["producer"] = producer_info.a.text
 
                     anime["tags"] = []
                     for tag_element in convert(
@@ -94,14 +93,24 @@ class MALSchedule:
                                   ).find("div", class_="scormem"
                                   ).find("span", title="Score"
                                   ).i.text)
-                    except ValueError: anime["score"] = "N/A"
+                    except ValueError: anime["score"] = 0
 
                     anime["synopsis"] = anime_entry.find("div", class_="synopsis js-synopsis").span.text.replace("\r", "")
                         
                     anime["metadata"] = dict()
                     for i in anime_entry.find("div", class_="synopsis js-synopsis").find_all("p", class_="mb4 mt8"):
-                        anime["metadata"][i.span.text.lower().strip(":")] = i.a.text
+                        anime["metadata"][i.span.text.strip(":")] = i.a.text.strip()
+                   
+                    # !!! Ratings are not from the MPAA. These are just suggestions based on given data.
+                    if "Demographic" in anime["metadata"] and anime["metadata"]["Demographic"] == "Kids":
+                        anime["estimated_rating"] = "G"
+                    if "Ecchi" in anime["tags"]:
+                        anime["estimated_rating"] = "R"
+                    if "Hentai" in anime["tags"] or "Erotics" in anime["tags"]:
+                        anime["estimated_rating"] = "NC-17"
+                    if "estimated_rating" not in anime:
+                        anime["estimated_rating"] = "PG"
 
-                    entries[ind].append(Anime(**anime))
+                    entries[weekday].append(Anime(**anime))
 
         return entries
