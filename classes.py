@@ -106,7 +106,7 @@ class MALSchedule:
                         anime["estimated_rating"] = "G"
                     if "Ecchi" in anime["tags"]:
                         anime["estimated_rating"] = "R"
-                    if "Hentai" in anime["tags"] or "Erotics" in anime["tags"]:
+                    if "Hentai" in anime["tags"] or "Erotica" in anime["tags"]:
                         anime["estimated_rating"] = "NC-17"
                     if "estimated_rating" not in anime:
                         anime["estimated_rating"] = "PG"
