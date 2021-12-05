@@ -13,16 +13,16 @@ schedule = scheduler.request_schedule()
 `schedule` is now a dictionary of lists. Each key represents the day of the week, starting with "Monday", "Tuesday", etc. Two other keys are also present: "Other" and "Unknown".
 ```json
 {
-     /* Lists of Anime */
-    "Monday": [...],
-    "Tuesday": [...],
-    "Wednesday": [...],
-    "Thursday": [...],
-    "Friday": [...],
-    "Saturday": [...],
-    "Sunday": [...],
-    "Other": [...],
-    "Unknown": [...],
+    // Lists of dataclass Anime
+    "Monday": [],
+    "Tuesday": [],
+    "Wednesday": [],
+    "Thursday": [],
+    "Friday": [],
+    "Saturday": [],
+    "Sunday": [],
+    "Other": [],
+    "Unknown": [],
 }
 ```
 
