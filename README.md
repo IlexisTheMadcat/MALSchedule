@@ -4,7 +4,9 @@ MALSchedule is currently not on PIP, so you must clone the folder into your work
 
 Now you can get the current week's release schedule. You will require an internet connection.
 ```py
-from MALSchedule import MALSchedule
+# Assuming you have the folder in your working directory:
+from MALSchedule.malschedule import MALSchedule
+#    ^ Folder    ^ File             ^ Class
 
 scheduler = MALSchedule()
 schedule = scheduler.request_schedule()
