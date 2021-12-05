@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup, Tag
 from utils import convert_list_iterator as convert
 
 
-class FetchError(Exception):
+class _FetchError(Exception):
     pass
 
 
@@ -17,6 +17,7 @@ class Anime:
     tags: list
     image_url: str
     score: float
+    mal_members: int
     synopsis: str
     metadata: dict
     estimated_rating: str
@@ -29,7 +30,7 @@ class MALSchedule:
     def request_schedule(self):
         response = requests.get("https://myanimelist.net/anime/season/schedule")
         if response.status_code != 200:
-            raise FetchError("MAL did not return a status code of 200.")
+            raise _FetchError("MAL did not return a status code of 200.")
 
         html = response.content
         soup = BeautifulSoup(html, "html.parser")
@@ -92,8 +93,17 @@ class MALSchedule:
                         anime_entry.find("div", class_="information"
                                   ).find("div", class_="scormem"
                                   ).find("span", title="Score"
-                                  ).i.text)
+                                  ).text.strip()
+                    )
                     except ValueError: anime["score"] = 0
+
+                    try: anime["mal_members"] = int(
+                            anime_entry.find("div", class_="information"
+                                    ).find("div", class_="scormem"
+                                    ).find("span", title="Members"
+                                    ).text.replace(",", "").strip("\n").strip()
+                    )
+                    except ValueError: anime["mal_members"] = 0
 
                     anime["synopsis"] = anime_entry.find("div", class_="synopsis js-synopsis").span.text.replace("\r", "")
                         
@@ -104,6 +114,8 @@ class MALSchedule:
                     # !!! Ratings are not from the MPAA. These are just suggestions based on given data.
                     if "Demographic" in anime["metadata"] and anime["metadata"]["Demographic"] == "Kids":
                         anime["estimated_rating"] = "G"
+                    if "Action" in anime["tags"] or "Horror" in anime["tags"]:
+                        anime["estimated_rating"] = "PG-13"
                     if "Ecchi" in anime["tags"]:
                         anime["estimated_rating"] = "R"
                     if "Hentai" in anime["tags"] or "Erotica" in anime["tags"]:

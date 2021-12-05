@@ -1,4 +1,4 @@
-from classes import MALSchedule
+from malschedule import MALSchedule
 
 if __name__ == "__main__":
     scheduler = MALSchedule()
@@ -11,12 +11,13 @@ if __name__ == "__main__":
                 f"Producer: {anime.producer}\n"
                 f"Tags: {', '.join(anime.tags)}\n"
                 f"Rating: {anime.score}/10\n"
+                f"MAL members: {anime.mal_members}\n"
                 f"Metadata: {', '.join([key+': '+value for key, value in anime.metadata.items()])}\n"
                 f"Viewer discretion: {anime.estimated_rating}\n"
                 f"\n"
                 f"Synopsis:\n"
                 f"{anime.synopsis}\n"
-                f"Image url: {anime.image_url}\n"
+                f"Image URL: {anime.image_url}\n"
                 f"----------\n"
                 f"\n"
             )
@@ -28,6 +29,7 @@ if __name__ == "__main__":
         f"Producer: {anime.producer}\n"
         f"Tags: {', '.join(anime.tags)}\n"
         f"Rating: {anime.score}/10\n"
+        f"MAL members: {anime.mal_members}\n"
         f"Metadata: {', '.join([key+': '+value for key, value in anime.metadata.items()])}\n"
         f"Viewer discretion: {anime.estimated_rating}\n"
         f"\n"
