@@ -1,4 +1,4 @@
-#Installation
+# Installation
 MALSchedule is currently not on PIP, so you must clone the folder into your working directory.
 `git clone https://github.com/SUPERMECHM500/MALSchedule`
 
@@ -61,7 +61,7 @@ class Anime:
     # Represents a view rating as if it were rated by the MPAA.
     # G (General Audience); If `metadata["Demographic"]` is for "Kids".
     # PG (Parental Guidence); If none of the other determining factors are met.
-    # PG-13 (Strong Parental Guidence); If "Romance" is present in `tags`.
+    # PG-13 (Strong Parental Guidence); If "Action" or "Horror" are present in `tags`.
     # R (Restricted); If "Ecchi" is present in `tags` .
     # NC-17 (Adults Only); If "Hentai" or "Erotica" are present in `tags`.
 ```
