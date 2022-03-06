@@ -8,7 +8,7 @@ if __name__ == "__main__":
         for anime in animes:
             print(
                 f"Name: {anime.name}\n"
-                f"Producer: {anime.producer}\n"
+                f"Broadcasting on: {anime.broadcasters}\n"
                 f"Tags: {', '.join(anime.tags)}\n"
                 f"Rating: {anime.score}/10\n"
                 f"MAL members: {anime.mal_members}\n"
@@ -22,11 +22,11 @@ if __name__ == "__main__":
                 f"\n"
             )
 
-    anime = schedule["Thursday"][0]  # Currently Komi Can't Communicate
+    anime = schedule["Monday"][1] 
     print(
         f"# SINGLE ANIME\n"
         f"Name: {anime.name}\n"
-        f"Producer: {anime.producer}\n"
+        f"Producer: {anime.broadcasters}\n"
         f"Tags: {', '.join(anime.tags)}\n"
         f"Rating: {anime.score}/10\n"
         f"MAL members: {anime.mal_members}\n"
