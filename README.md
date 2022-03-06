@@ -35,8 +35,8 @@ class Anime:
     name: str  
     # The name of the anime.
     
-    producer: str  
-    # The producer/studio of the anime.
+    broadcasters: list
+    # The broadcasting platforms the anime is available on.
 
     tags: list  
     # The tags associated with the anime, according to MAL.
