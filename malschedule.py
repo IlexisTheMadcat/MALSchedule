@@ -4,7 +4,15 @@ from dataclasses import dataclass
 
 from bs4 import BeautifulSoup, Tag
 
-from utils import convert_list_iterator as convert
+# from utils import convert_list_iterator (doesn't work for some reason on Kyaru)
+# ----------------------
+def convert(iterator) -> list:
+    new_list = [i for i in iterator]
+    while "\n" in new_list:
+        new_list.remove("\n")
+
+    return new_list
+# ----------------------
 
 
 class _FetchError(Exception):
@@ -49,7 +57,11 @@ class MALSchedule:
                 continue
 
             anime = dict()
+            
             for anime_entry in convert(day_data.children):
+                try: anime_entry["class"]
+                except KeyError: continue
+
                 try: anime_entry["style"]
                 except KeyError: pass
                 else: 
@@ -133,3 +145,18 @@ class MALSchedule:
                     entries[weekday].append(Anime(**anime))
 
         return entries
+
+
+from discord.ext.commands.cog import Cog
+from discord.ext.commands.core import (
+    has_permissions, 
+    bot_has_permissions, 
+    command
+)
+
+class Commands(Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+def setup(bot):
+    bot.add_cog(Commands(bot))
